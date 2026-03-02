@@ -1,1 +1,11 @@
+/* tailwind cdn */
 @import "tailwindcss";
+
+/* google font */
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.font-bangla{
+  font-family: "Hind Siliguri", sans-serif;
+}
