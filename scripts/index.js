@@ -1,3 +1,18 @@
+const createEls = (arr) => {
+  const htmlEls = arr.map((el) => `<span class="btn">${el}</span>`);
+  return htmlEls.join(" ");
+};
+
+const manageSpinner = (status) => {
+  if (status == true) {
+    document.getElementById("spinner").classList.remove("hidden");
+    document.getElementById("word-container").classList.add("hidden");
+  } else {
+    document.getElementById("word-container").classList.remove("hidden");
+    document.getElementById("spinner").classList.add("hidden");
+  }
+};
+
 const loadLessons = () => {
   fetch("https://openapi.programming-hero.com/api/levels/all") //promise of response
     .then((res) => res.json())
@@ -7,12 +22,13 @@ const loadLessons = () => {
 const remoteActive = () => {
   const lessonBtn = document.querySelectorAll(".lessonBtn");
   // console.log(lessonBtn);
-  lessonBtn.forEach(btn=>{
-    btn.classList.remove("active")
-  })
+  lessonBtn.forEach((btn) => {
+    btn.classList.remove("active");
+  });
 };
 
 const loadLevelWord = (id) => {
+  manageSpinner(true);
   // console.log(id);
   const url = `https://openapi.programming-hero.com/api/level/${id}`;
   // console.log(url);
@@ -25,7 +41,6 @@ const loadLevelWord = (id) => {
       displayLevelWord(data.data);
     });
 };
-
 
 // {
 //     "word": "Eager",
@@ -43,17 +58,17 @@ const loadLevelWord = (id) => {
 //     "id": 5
 // }
 
-const loadWordDetail = async(id)=>{
+const loadWordDetail = async (id) => {
   const url = `https://openapi.programming-hero.com/api/word/${id}`;
-  const res =await fetch(url)
+  const res = await fetch(url);
   const details = await res.json();
   displayWordDetails(details.data);
 };
 
-const displayWordDetails = (word)=>{
-console.log(word);
-const detailsContainer = document.getElementById("details-container")
-detailsContainer.innerHTML = `
+const displayWordDetails = (word) => {
+  console.log(word);
+  const detailsContainer = document.getElementById("details-container");
+  detailsContainer.innerHTML = `
 <div class="">
             <h2 class="font-bangla text-2xl font-bold">${word.word} (<i class="fa-solid fa-microphone-lines"></i>:${word.pronunciation})</h2>
           </div>
@@ -67,12 +82,11 @@ detailsContainer.innerHTML = `
         </div>
           <div class="">
             <h2 class=" font-bold">Synonym</h2>
-            <span class="btn">syn-1</span>
-            <span class="btn">syn-2</span>
-            <span class="btn">syn-3</span>
+            <div class="">${createEls(word.synonyms)}</div>
+             
         </div>
 `;
-document.getElementById("word_modal").showModal();
+  document.getElementById("word_modal").showModal();
 };
 
 const displayLevelWord = (words) => {
@@ -80,6 +94,7 @@ const displayLevelWord = (words) => {
   wordContainer.innerHTML = "";
 
   if (words.length == 0) {
+    manageSpinner(true) //নিজে বুঝে করলাম :)
     wordContainer.innerHTML = `
      <div class="text-center col-span-full space-y-6">
      <img class="mx-auto" src="./assets/alert-error.png" alt="">
@@ -91,11 +106,10 @@ const displayLevelWord = (words) => {
      </h2>
       </div>
      `;
-    return;
+    return manageSpinner(false); //রিটার্ন এর ভিতর আরেকটা ফানশন চলবে কিনা জানিনা কিন্তু নিজে বুঝে দিলাম ।
   }
 
-  
-// property's keys and values
+  // property's keys and values
   //   {
   //     "id": 79,
   //     "level": 1,
@@ -126,6 +140,7 @@ const displayLevelWord = (words) => {
 `;
     wordContainer.append(card);
   });
+  manageSpinner(false);
 };
 
 const displayLessons = (lessons) => {
